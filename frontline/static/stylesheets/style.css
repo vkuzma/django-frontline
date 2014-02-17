@@ -5,8 +5,6 @@
   .marked-editable:focus {
     cursor: text;
     outline: none; }
-    .marked-editable:focus:before {
-      background-color: rgba(0, 0, 0, 0.1); }
   .marked-editable:before {
     content: "";
     width: 20px;
@@ -19,6 +17,8 @@
     cursor: pointer;
     padding: 4px;
     border-radius: 4px; }
+  .marked-editable:hover:before, .marked-editable:focus:before {
+    background-color: rgba(0, 0, 0, 0.05); }
 
 .live-edit-contenttype-edit {
   display: none; }
@@ -35,21 +35,17 @@
   font-size: 13px; }
   #live-edit .save-progress {
     display: none; }
-
-#live-edit .inner {
-  background: #fdc205;
-  padding: 10px;
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-  text-align: center;
-  float: right;
-  clear: right; }
-
-#live-edit .inner {
-  color: white; }
-
-#live-edit .inner + .inner {
-  margin-top: 10px; }
+  #live-edit .inner {
+    background: #fdc205;
+    padding: 10px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    text-align: center;
+    float: right;
+    clear: right;
+    color: white; }
+    #live-edit .inner + .inner {
+      margin-top: 10px; }
 
 #live-edit button {
   -webkit-appearance: none;

@@ -12,9 +12,9 @@
         initDom: function() {
             this.$panel = $('#live-edit');
             
-            this.simple_text = $('[live-editable-simple]');
+            this.simple_text = $('.fronline-edit.inline');
 
-            this.richtext_text = $('[live-editable-richtext]');
+            this.richtext_text = $('.fronline-edit.lightbox');
             this.richtext_btn = $('.live-edit-richtext-btn');
 
             this.editable = false;
@@ -82,9 +82,16 @@
                 self.saveRichtext();
                 self.cancelLightBox();
             });
+
+            this.richtext_text.click(function() {
+                event.preventDefault();
+                self.active_anchor = $(this).attr('data-anchor');
+                self.openLightBox();
+            });
         },
         startEditing: function() {
             this.simple_text.attr('contenteditable', 'true').addClass('marked-editable');
+            this.richtext_text.addClass('marked-editable');
             this.editable = true;
             this.contenttypes_edit_btns.show();
             this.richtext_btn.show();
@@ -95,6 +102,7 @@
         },
         stopEditing: function() {
             this.simple_text.attr('contenteditable', 'false').removeClass('marked-editable');
+            this.richtext_text.removeClass('marked-editable');
             this.editable = false;
             this.contenttypes_edit_btns.hide();
             this.richtext_btn.hide();

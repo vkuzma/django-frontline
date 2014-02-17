@@ -22,26 +22,11 @@ def getEntry(anchor):
 
 
 @register.simple_tag(takes_context=True)
-def live_edit_simple(context, anchor, editor=''):
+def frontline_edit(context, anchor, editor='', embed_type='inline'):
     entry = getEntry(anchor)
     if context['request'].user.is_staff:
-        editor = 'class="%s"' % editor
-        if entry:
-            return '<span %s live-editable-simple data-anchor=%s>%s</span>' % (editor, anchor, entry.data)
-        return '<span %s live-editable-simple data-anchor=%s>enter_text</span>' % (editor, anchor)
-    else:
-        return entry.data
-    
-
-@register.simple_tag(takes_context=True)
-def live_edit_richtext(context, anchor):
-    entry = getEntry(anchor)
-    if context['request'].user.is_staff:
-        if entry:
-            rendered_content = '<span live-editable-richtext data-anchor=%s>%s</span>' % (anchor, entry.data)
-        else:
-            rendered_content = '<span live-editable-richtext data-anchor=%s>enter_text</span>' % anchor
-        return rendered_content + '<button href="" btn-data-anchor=%s class="live-edit-richtext-btn">edit richtext</button>' % anchor
+        data = entry.data if entry else 'enter_text'
+        return '<span class="fronline-edit %s %s" data-anchor=%s>%s</span>' % (editor, embed_type, anchor, data)
     else:
         return entry.data
 
@@ -53,30 +38,16 @@ def live_edit_ct(context, page, region):
     return ''
 
 
-@register.simple_tag(takes_context=True)
-def live_edit_css(context):
-    if context['request'].user.is_staff:
-        return '<link rel="stylesheet" type="text/css" href="/static/stylesheets/style.css">'
-    return ''
-
-
 from feincms.module.page.models import Page
 from feincms.module.medialibrary.models import MediaFile
 
 
 @register.simple_tag(takes_context=True)
-def live_edit_js(context):
+def fronline_media(context):
     if context['request'].user.is_staff:
         content = {
             'pages': Page.objects.all(),
             'mediafiles': MediaFile.objects.all()
         }
-        return render_to_string('frontline/js_includes.html', content)
-    return ''
-
-
-@register.simple_tag(takes_context=True)
-def live_edit_panel(context):
-    if context['request'].user.is_staff:
-        return render_to_string('frontline/panel.html')
+        return render_to_string('frontline/media_includes.html', content)
     return ''

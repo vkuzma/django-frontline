@@ -5,8 +5,6 @@
     &:focus
         cursor: text
         outline: none
-        &:before
-            background-color: rgba(0, 0, 0, .1)
     &:before
         content: ''
         width: 20px
@@ -19,6 +17,9 @@
         cursor: pointer
         padding: 4px
         border-radius: 4px
+    &:hover:before,
+    &:focus:before
+        background-color: rgba(0, 0, 0, .05)
 
 .live-edit-contenttype-edit
     display: none
@@ -35,21 +36,17 @@
     font-size: 13px
     .save-progress
         display: none
-
-#live-edit .inner
-    background: #FDC205
-    padding: 10px
-    border-top-left-radius: 10px
-    border-bottom-left-radius: 10px
-    text-align: center
-    float: right
-    clear: right
-
-#live-edit .inner
-    color: white
-
-#live-edit .inner + .inner
-    margin-top: 10px
+    .inner
+        background: #FDC205
+        padding: 10px
+        border-top-left-radius: 10px
+        border-bottom-left-radius: 10px
+        text-align: center
+        float: right
+        clear: right
+        color: white
+        & + .inner
+            margin-top: 10px
 
 #live-edit button
     -webkit-appearance: none

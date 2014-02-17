@@ -1,4 +1,4 @@
 *.pyc
 .DS_Store
-.sass_cached
+.sass-cache
 media
