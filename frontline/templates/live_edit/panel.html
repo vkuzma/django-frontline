@@ -1,0 +1,16 @@
+<div id="live-edit">
+    <div class="inner">
+        <button id="live-edit-start">edit</button>
+        <button id="live-edit-stop" style="display: none">stop edit</button>
+        <!-- <button id="live-edit-save">save</button> -->
+    </div>
+    <div class="inner save-progress">
+        <div ><div>Änderung wurde gespeichert</div></div>
+    </div>
+</div>
+
+<div id="updated-warning" style="display: none;">
+    <p>Es gab Änderung im Backend. Laden sie die Seite neu. <a href="">neu laden</a></p>
+</div>
+
+{% include "live_edit/iframe.html" %}

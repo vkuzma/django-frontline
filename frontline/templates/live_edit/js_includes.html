@@ -1,0 +1,52 @@
+<script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
+<script type="text/javascript">
+    window.link_list = [
+            {% for page in pages %}
+                {title: '{{ page }}', value: '{{ page.get_absolute_url }}'}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+            {% if mediafiles %}
+                ,{title: '', value: '/'},
+                {title: '-- Mediafiles --', value: '/'},
+            {% endif %}
+            {% for mediafile in mediafiles %}
+                {title: '{{ mediafile }}', value: '{{ mediafile.get_absolute_url }}'}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
+    window.tinymce_config = {
+        plugins: "link, image, paste",
+        selector: "#live-edit-lightbox-editor",
+        height: 350,
+        width: 700,
+        menubar: false,
+        toolbar: "formatselect,|,link, unlink,|,undo, redo,|,bullist, numlist,|,image, code",
+        block_formats: "Paragraph=p;Header 1=h1;Header 2=h2;Header 3=h3",
+        paste_auto_cleanup_on_paste: true,
+        paste_word_valid_elements: "",
+        valid_styles: {
+            
+        },
+        link_list: window.link_list,
+        image_list: [
+            {% for mediafile in mediafiles %}
+                {title: '{{ mediafile }}', value: '{{ mediafile.get_absolute_url }}'}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ],
+        image_list: [
+            {% for mediafile in mediafiles %}
+                {title: '{{ mediafile }}', value: '{{ mediafile.get_absolute_url }}'}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ]
+     };
+
+     window.tinymce_inline_config = {
+        selector: "span.tinymce",
+        inline: true,
+        plugins: "link",
+        toolbar: "link, unlink",
+        link_list: window.link_list,
+        menubar: false
+    };
+</script>
+
+<script type="text/javascript" src="/static/javascript/lib/jquery.min.js"></script>
+<script type="text/javascript" src="/static/javascript/liveEdit.js"></script>
