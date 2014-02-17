@@ -10,19 +10,17 @@
 
     Frontline.prototype = {
         initDom: function() {
-            this.$panel = $('#live-edit');
+            this.$panel = $('#frontline-panel');
             
-            this.simple_text = $('.fronline-edit.inline');
+            this.inline_edit = $('.frontline-edit.inline');
 
-            this.richtext_text = $('.fronline-edit.lightbox');
-            this.richtext_btn = $('.live-edit-richtext-btn');
+            this.richtext_edit = $('.frontline-edit.lightbox');
 
-            this.editable = false;
             this.active_anchor = null;
 
             this.save_btn = $('#live-edit-save');
 
-            this.lightbox_container = $('#live-edit-lightbox');
+            this.lightbox_container = $('#frontline-lightbox');
 
             this.contenttypes_edit_btns = $('.live-edit-contenttype-edit');
 
@@ -42,7 +40,7 @@
             var self = this;
 
             // focus out simpletext
-            this.simple_text.focusin(function() {
+            this.inline_edit.focusin(function() {
                 self.selectedContent = $(this).html();
             }).focusout(function() {
                 var $this = $(this);
@@ -63,12 +61,6 @@
                 this.showUpdatedWarning();
             }, this));
 
-            // open richtexteditor in a lightbox
-            this.richtext_btn.click(function(event) {
-                event.preventDefault();
-                self.active_anchor = $(this).attr('btn-data-anchor');
-                self.openLightBox();
-            });
 
             // lightbox close
             this.lightbox_container.find('.cancel').click(function(event) {
@@ -83,38 +75,33 @@
                 self.cancelLightBox();
             });
 
-            this.richtext_text.click(function() {
+            this.richtext_edit.click(function() {
                 event.preventDefault();
                 self.active_anchor = $(this).attr('data-anchor');
                 self.openLightBox();
             });
         },
         startEditing: function() {
-            this.simple_text.attr('contenteditable', 'true').addClass('marked-editable');
-            this.richtext_text.addClass('marked-editable');
-            this.editable = true;
+            this.inline_edit.attr('contenteditable', 'true').addClass('marked-editable');
+            this.richtext_edit.addClass('marked-editable');
             this.contenttypes_edit_btns.show();
-            this.richtext_btn.show();
             this.edit_start_btn.hide();
             this.edit_stop_btn.show();
 
             tinymce.init(window.tinymce_inline_config);
         },
         stopEditing: function() {
-            this.simple_text.attr('contenteditable', 'false').removeClass('marked-editable');
-            this.richtext_text.removeClass('marked-editable');
-            this.editable = false;
+            this.inline_edit.attr('contenteditable', 'false').removeClass('marked-editable');
+            this.richtext_edit.removeClass('marked-editable');
             this.contenttypes_edit_btns.hide();
-            this.richtext_btn.hide();
             this.edit_start_btn.show();
             this.edit_stop_btn.hide();
 
-            tinymce.remove('span[live-editable-simple]');
+            tinymce.remove('span.tinymce.inline');
         },
         proceedSave: function() {
-            // prepare simpletext
             var simple_text_list = '';
-            this.simple_text.each($.proxy(function(key, value) {
+            this.inline_edit.each($.proxy(function(key, value) {
                 var $value = $(value);
                 var stripped_tring = $value.html();
                 if(!$value.hasClass('tinymce'))
@@ -124,7 +111,7 @@
 
             // prepare richtext
             var richtext_text_list = '';
-            this.richtext_text.each($.proxy(function(key, value) {
+            this.richtext_edit.each($.proxy(function(key, value) {
                 var $value = $(value);
                 simple_text_list += $value.attr('data-anchor') + "=" + escape($value.html()) + '&';
             }, this));

@@ -26,7 +26,7 @@ def frontline_edit(context, anchor, editor='', embed_type='inline'):
     entry = getEntry(anchor)
     if context['request'].user.is_staff:
         data = entry.data if entry else 'enter_text'
-        return '<span class="fronline-edit %s %s" data-anchor=%s>%s</span>' % (editor, embed_type, anchor, data)
+        return '<span class="frontline-edit %s %s" data-anchor=%s>%s</span>' % (editor, embed_type, anchor, data)
     else:
         return entry.data
 
@@ -43,7 +43,7 @@ from feincms.module.medialibrary.models import MediaFile
 
 
 @register.simple_tag(takes_context=True)
-def fronline_media(context):
+def frontline_media(context):
     if context['request'].user.is_staff:
         content = {
             'pages': Page.objects.all(),
