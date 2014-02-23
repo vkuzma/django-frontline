@@ -13,8 +13,8 @@
             this.$panel = $('#frontline-panel');
             
             this.inline_edit = $('.frontline-edit.inline');
-
             this.richtext_edit = $('.frontline-edit.lightbox');
+            this.image_edit = $('.frontline-image-edit');
 
             this.active_anchor = null;
 
@@ -22,24 +22,20 @@
 
             this.lightbox_container = $('#frontline-lightbox');
 
-            this.contenttypes_edit_btns = $('.live-edit-contenttype-edit');
-
             this.edit_start_btn = $('#live-edit-start');
             this.edit_stop_btn = $('#live-edit-stop');
 
             this.updated_warning = $('#updated-warning');
         },
+        // init user actions
         initActions: function() {
-            this.save_btn.click($.proxy(this.proceedSave, this));
-
             this.edit_start_btn.click($.proxy(this.startEditing, this));
             this.edit_stop_btn.click($.proxy(this.stopEditing, this));
 
             this.selectedContent = null;
-
             var self = this;
 
-            // focus out simpletext
+            // focusin inline edit
             this.inline_edit.focusin(function() {
                 self.selectedContent = $(this).html();
             }).focusout(function() {
@@ -47,82 +43,77 @@
                 // selected content stayed the same, do not save
                 if(self.selectedContent == $this.html())
                     return;
+
+                // if its not richtext, then call striptags
                 if(!$this.hasClass('tinymce'))
                     $this.html(self.stripTag($this.html()));
-                self.proceedSave();
-                if(!$this.text() || $this.text() === '')
-                    $this.html('<span class="live-edit-empty">empty<span>');
+
+                // save data
+                self.saveData();
+
                 self.selectedContent = null;
-            });
-
-            this.has_been_modified = false;
-            this.contenttypes_edit_btns.click($.proxy(function() {
-                this.has_been_modified = true;
-                this.showUpdatedWarning();
-            }, this));
-
-
-            // lightbox close
-            this.lightbox_container.find('.cancel').click(function(event) {
-                event.preventDefault();
-                self.cancelLightBox();
-            });
-
-            // lightbox save
-            this.lightbox_container.find('.save').click(function(event) {
-                event.preventDefault();
-                self.saveRichtext();
-                self.cancelLightBox();
-            });
-
-            this.richtext_edit.click(function() {
-                event.preventDefault();
-                self.active_anchor = $(this).attr('data-anchor');
-                self.openLightBox();
             });
         },
         startEditing: function() {
             this.inline_edit.attr('contenteditable', 'true').addClass('marked-editable');
             this.richtext_edit.addClass('marked-editable');
-            this.contenttypes_edit_btns.show();
-            this.edit_start_btn.hide();
+            this.image_edit.show();
+
             this.edit_stop_btn.show();
+            this.edit_start_btn.hide();
 
             tinymce.init(window.tinymce_inline_config);
+
+            var self = this;
+
+            // open richtext editor
+            this.richtext_edit.click(function() {
+                event.preventDefault();
+                self.current_edit = $(this);
+                self.active_name = $(this).attr('data-name');
+                self.openRichtextInLightbox(self.active_name);
+            });
+
+            // open image upload form
+            this.image_edit.click(function(event) {
+                event.preventDefault();
+                self.current_edit = $(this);
+                self.active_name = self.current_edit.attr('data-name');
+                self.openImageFormInLightbox(self.active_name);
+            });
         },
         stopEditing: function() {
             this.inline_edit.attr('contenteditable', 'false').removeClass('marked-editable');
             this.richtext_edit.removeClass('marked-editable');
-            this.contenttypes_edit_btns.hide();
-            this.edit_start_btn.show();
+            this.image_edit.hide();
+
             this.edit_stop_btn.hide();
+            this.edit_start_btn.show();
 
             tinymce.remove('span.tinymce.inline');
+
+            this.richtext_edit.unbind();
+            this.image_edit.unbind();
         },
-        proceedSave: function() {
-            var simple_text_list = '';
+        // save inline data
+        saveData: function() {
+            var inline_text_list = '';
             this.inline_edit.each($.proxy(function(key, value) {
                 var $value = $(value);
                 var stripped_tring = $value.html();
                 if(!$value.hasClass('tinymce'))
                     stripped_tring = this.stripTag($value.html());
-                simple_text_list += $value.attr('data-anchor') + "=" + escape(stripped_tring) + '&';
-            }, this));
-
-            // prepare richtext
-            var richtext_text_list = '';
-            this.richtext_edit.each($.proxy(function(key, value) {
-                var $value = $(value);
-                simple_text_list += $value.attr('data-anchor') + "=" + escape($value.html()) + '&';
+                inline_text_list += $value.attr('data-name') + "=" + escape(stripped_tring) + '&';
             }, this));
 
             $.ajax({
                 url: '/api/save/',
                 method: 'POST',
-                data: simple_text_list
+                data: inline_text_list
             });
             this.showSaveView();
         },
+        // display small window to show that data is saving
         showSaveView: function() {
             if(!this.save_progress_view)
                 this.save_progress_view = this.$panel.find('.save-progress');
@@ -138,18 +129,75 @@
         stripTag: function(text) {
             return text.replace(/(?!<br>)(<([^>]+)>)/ig,"");
         },
-        openLightBox: function() {
+        openRichtextInLightbox: function(name) {
+            var self = this;
+            $.ajax({
+                url: '/api/richtext-form/' + name + '/',
+                success: function(result) {
+                    self.lightbox_container.find('.content').html(result);
+                    // lightbox save
+                    self.lightbox_container.find('.save').click(function(event) {
+                        event.preventDefault();
+                        var data = $('#frontline-richtext-form').serialize();
+                        data += '&data=' + tinymce.activeEditor.getContent();
+                        $.post('/api/richtext-form/' + name + '/', data,
+                            function(result) {
+                                self.current_edit.html(result);
+                            });
+                        self.cancelLightBox();
+                    });
+                    // lightbox close
+                    self.lightbox_container.find('.cancel').click(function(event) {
+                        event.preventDefault();
+                        self.cancelLightBox();
+                    });
+                }
+            });
+
             this.lightbox_container.show();
             this.tinymce = tinymce.init(window.tinymce_config);
-            tinymce.activeEditor.setContent($('[data-anchor="' + this.active_anchor + '"]').html());
+            tinymce.activeEditor.setContent($('[data-name="' + this.active_name + '"]').html());
+        },
+        openImageFormInLightbox: function(name) {
+            var self = this;
+            $.ajax({
+                url: '/api/image-upload-form/' + name,
+                success: function(result) {
+                    self.lightbox_container.find('.content').html(result);
+
+                    // lightbox close
+                    self.lightbox_container.find('.cancel').click(function(event) {
+                        event.preventDefault();
+                        self.cancelLightBox();
+                    });
+
+                    self.lightbox_container.find('#frontline-image-upload-form').submit(function(event) {
+                        event.preventDefault();
+                        var form_data = new FormData(this);
+                        $.ajax({
+                            type:'POST',
+                            url: '/api/image-upload-form/' + name + '/?option=' +
+                                self.current_edit.attr('data-option'),
+                            data: form_data,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success:function(result){
+                                self.lightbox_container.find('.content').html(result);
+                                // location.reload();
+                            },
+                            error: function(result){
+                                self.lightbox_container.find('.content').html(result);
+                            }
+                        });
+                    });
+                }
+            });
+            this.lightbox_container.show();
         },
         cancelLightBox: function() {
             this.lightbox_container.hide();
         },
-        saveRichtext: function() {
-            $('[data-anchor="' + this.active_anchor + '"]').html(tinymce.activeEditor.getContent());
-            this.proceedSave();
-        }
     };
 
     function getCookie(name) {

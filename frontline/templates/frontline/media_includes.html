@@ -1,21 +1,10 @@
 <link rel="stylesheet" type="text/css" href="/static/stylesheets/style.css">
 <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
 <script type="text/javascript">
-    window.link_list = [
-            {% for page in pages %}
-                {title: '{{ page }}', value: '{{ page.get_absolute_url }}'}{% if not forloop.last %},{% endif %}
-            {% endfor %}
-            {% if mediafiles %}
-                ,{title: '', value: '/'},
-                {title: '-- Mediafiles --', value: '/'},
-            {% endif %}
-            {% for mediafile in mediafiles %}
-                {title: '{{ mediafile }}', value: '{{ mediafile.get_absolute_url }}'}{% if not forloop.last %},{% endif %}
-            {% endfor %}
-        ];
+
     window.tinymce_config = {
         plugins: "link, image, paste",
-        selector: "#live-edit-lightbox-editor",
+        selector: "textarea",
         height: 350,
         width: 700,
         menubar: false,
@@ -26,7 +15,6 @@
         valid_styles: {
             
         },
-        link_list: window.link_list,
         image_list: [
             {% for mediafile in mediafiles %}
                 {title: '{{ mediafile }}', value: '{{ mediafile.get_absolute_url }}'}{% if not forloop.last %},{% endif %}
@@ -44,7 +32,6 @@
         inline: true,
         plugins: "link",
         toolbar: "link, unlink",
-        link_list: window.link_list,
         menubar: false
     };
 </script>

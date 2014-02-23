@@ -1,0 +1,13 @@
+<form method="post" id="frontline-richtext-form">
+    {% csrf_token %}
+    {{ form.data }}
+    {{ form.name }}
+    {{ form.errors }}
+    <button type="submit" class="save">speichern</button>
+    <button class="cancel">schliessen</button>
+</form>
+<br>
+
+<script type="text/javascript">
+    tinymce.init(window.tinymce_config);
+</script>

@@ -1,0 +1,7 @@
+
+<form method="POST" action="." id="frontline-image-upload-form">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="speichern und neu laden">
+</form>
+<button class="cancel">schliessen</button>
