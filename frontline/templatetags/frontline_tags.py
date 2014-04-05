@@ -39,7 +39,7 @@ def frontline_edit(context, name, editor='', embed_type='inline'):
     entry = getEntry(name)
     if context['request'].user.is_staff:
         data = entry.data if entry else 'enter_text'
-        return '<span class="frontline-edit %s %s" data-name=%s>%s</span>' % (editor, embed_type, name, data)
+        return '<span class="frontline-edit %s %s" data-name=%s><a class="frontline-edit-btn" href="#"><span class="frontline-icon-edit"></span></a><span class="frontline-content">%s</span></span>' % (editor, embed_type, name, data)
     else:
         return entry.data
 
@@ -47,7 +47,7 @@ def frontline_edit(context, name, editor='', embed_type='inline'):
 @register.simple_tag(takes_context=True)
 def frontline_image_edit(context, name, **kwargs):
     if context['request'].user.is_staff:
-        return '<a href="#" data-name="%s" data-option="%s" class="frontline-image-edit">image edit</a>' % (name, kwargs.get('option'))
+        return '<span class="frontline-image-edit" data-name="%s" data-option="%s"><a href="" class="frontline-image-edit"><span class="frontline-icon-edit"></span></a></span>' % (name, kwargs.get('option'))
     return ''
 
 

@@ -1,14 +1,37 @@
-<div id="frontline-panel">
-    <div class="inner">
-        <button id="live-edit-start">edit</button>
-        <button id="live-edit-stop" style="display: none">stop edit</button>
-        <!-- <button id="live-edit-save">save</button> -->
+<div id="frontline-panel" class="frontline-box">
+    <div class="frontline-inner">
+        <a class="frontline-main-icon frontline-icon-edit frontline-open-panel-btn" href="#"></a>
+        <ul>
+            <li>
+                <button class="btn" id="live-edit-start"><span class="frontline-icon-pencil frontline-icon"></span>Edit</button>
+                <button class="btn" id="live-edit-stop" style="display: none"><span class="frontline-icon-pencil frontline-icon"></span>Quit Editing</button>
+            </li>
+            <li>
+                <button class="btn" id="live-edit-save"><span class="frontline-icon-floppy frontline-icon"></span>Save changes</button>
+            </li>
+            <li>
+                <a class="btn" href="/admin/" target="_blank" id="live-edit-save"><span class="frontline-icon-cogs frontline-icon"></span>Admin</a>
+            </li>
+            <li>
+                <a class="btn" href="/admin/logout/" id="live-edit-save"><span class="frontline-icon-exit2 frontline-icon"></span>Log out</a>
+            </li>
+        </ul>
     </div>
-    <div class="inner save-progress">
-        <div ><div>Änderung wurde gespeichert</div></div>
-    </div>
+</div>
+<div id="frontline-save-progress" class="frontline-box">
+    <div class="quick-info-content">Änderung wurde gespeichert</div>
 </div>
 
 <div id="updated-warning" style="display: none;">
     <p>Es gab Änderung im Backend. Laden sie die Seite neu. <a href="">neu laden</a></p>
+</div>
+
+<div id="frontline-lightbox" style="display: none;">
+    <div class="wrapper">
+        <div class="inner">
+            <div class="content">
+
+            </div>
+        </div>
+    </div>
 </div>

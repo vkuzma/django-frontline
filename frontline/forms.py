@@ -9,5 +9,6 @@ class RichtextForm(forms.ModelForm):
 
 
 class ImageUploadForm(forms.ModelForm):
+    name = forms.CharField(widget=forms.HiddenInput())
     class Meta:
         model = ImageEntry

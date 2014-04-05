@@ -1,75 +1,178 @@
-.marked-editable {
+.frontline-marked-editable {
   position: relative;
   cursor: pointer;
   word-wrap: initial; }
-  .marked-editable:focus {
+  .frontline-marked-editable:focus {
     cursor: text;
     outline: none; }
-  .marked-editable:before {
-    content: "";
+  .frontline-marked-editable .frontline-edit-btn,
+  .frontline-marked-editable .frontline-image-edit {
     width: 20px;
     height: 20px;
     position: absolute;
     left: -34px;
     top: -7px;
-    background: url(/static/live_edit/images/edit_icon.png) no-repeat;
+    background-color: #28d59e;
     background-position: 4px 4px;
     cursor: pointer;
-    padding: 4px;
-    border-radius: 4px; }
-  .marked-editable:hover:before, .marked-editable:focus:before {
-    background-color: rgba(0, 0, 0, 0.05); }
+    padding: 6px 2px 2px 6px;
+    border-radius: 4px;
+    -moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+    text-decoration: none; }
+    .frontline-marked-editable .frontline-edit-btn.edit,
+    .frontline-marked-editable .frontline-image-edit.edit {
+      z-index: 10000; }
+      .frontline-marked-editable .frontline-edit-btn.edit .frontline-icon-edit:before,
+      .frontline-marked-editable .frontline-image-edit.edit .frontline-icon-edit:before {
+        content: "\e603"; }
+    .frontline-marked-editable .frontline-edit-btn .frontline-icon-edit,
+    .frontline-marked-editable .frontline-image-edit .frontline-icon-edit {
+      display: inline;
+      font-family: "icomoon";
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      line-height: 1;
+      color: black;
+      font-size: 18px;
+      position: absolute;
+      top: 5px;
+      left: 5px; }
+      .frontline-marked-editable .frontline-edit-btn .frontline-icon-edit:before,
+      .frontline-marked-editable .frontline-image-edit .frontline-icon-edit:before {
+        text-decoration: none;
+        content: "\e604"; }
 
-.live-edit-contenttype-edit {
+.frontline-edit-btn .frontline-icon-edit,
+.frontline-image-edit .frontline-icon-edit {
   display: none; }
 
-.live-edit-richtext-btn {
-  display: none; }
-
-.frontline-image-edit {
-  display: none; }
+.frontline-box {
+  font-family: Helvetica;
+  font-size: 14px;
+  color: #e3fff6;
+  background-color: #28d59e;
+  -moz-border-top-left-radius: 10px;
+  -webkit-border-top-left-radius: 10px;
+  border-top-left-radius: 10px;
+  -moz-border-bottom-left-radius: 10px;
+  -webkit-border-bottom-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  -moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5); }
 
 #frontline-panel {
   position: fixed;
-  right: 0;
-  top: 50%;
-  bottom: 20px;
-  font-family: Arial;
-  font-size: 13px; }
-  #frontline-panel .save-progress {
-    display: none; }
-  #frontline-panel .inner {
-    background: #fdc205;
-    padding: 10px;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-    text-align: center;
-    float: right;
-    clear: right;
-    color: white; }
-    #frontline-panel .inner + .inner {
-      margin-top: 10px; }
-  #frontline-panel button {
+  top: 200px;
+  right: -110px;
+  width: 200px;
+  height: 60px;
+  overflow: hidden;
+  -webkit-transition: height 500ms ease, right 500ms ease;
+  -moz-transition: height 500ms ease, right 500ms ease;
+  -ms-transition: height 500ms ease, right 500ms ease;
+  -o-transition: height 500ms ease, right 500ms ease;
+  transition: height 500ms ease, right 500ms ease; }
+  #frontline-panel.out li {
+    opacity: 1;
+    -webkit-transition: opacity 600ms linear 200ms;
+    -moz-transition: opacity 600ms linear 200ms;
+    -ms-transition: opacity 600ms linear 200ms;
+    -o-transition: opacity 600ms linear 200ms;
+    transition: opacity 600ms linear 200ms; }
+  #frontline-panel .frontline-inner {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    width: 100%;
+    padding: 10px 17px 17px; }
+  #frontline-panel ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: center; }
+  #frontline-panel li {
+    opacity: 0;
+    -webkit-transition: opacity 200ms linear 0;
+    -moz-transition: opacity 200ms linear 0;
+    -ms-transition: opacity 200ms linear 0;
+    -o-transition: opacity 200ms linear 0;
+    transition: opacity 200ms linear 0; }
+  #frontline-panel li + li {
+    margin-top: 10px; }
+  #frontline-panel .btn {
     -webkit-appearance: none;
-    width: 80px;
-    background: white;
+    font-family: Helvetica;
+    font-weight: bold;
+    font-size: 14px;
+    color: black;
+    background: #4affc6;
     border: none;
     border-radius: 4px;
-    padding: 5px 8px;
-    text-transform: uppercase;
+    padding: 0 8px;
+    height: 40px;
+    line-height: 40px;
     cursor: pointer;
-    font-family: Arial; }
-    #frontline-panel button:hover {
-      text-decoration: underline; }
+    display: block;
+    text-transform: none;
+    position: relative;
+    text-decoration: none;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -webkit-transition: background-color 200ms linear 0s;
+    -moz-transition: background-color 200ms linear 0s;
+    -ms-transition: background-color 200ms linear 0s;
+    -o-transition: background-color 200ms linear 0s;
+    transition: background-color 200ms linear 0s;
+    width: 100%; }
+    #frontline-panel .btn:hover {
+      background-color: #7dffd6; }
+    #frontline-panel .btn:focus {
+      outline: none; }
+  #frontline-panel .frontline-icon {
+    position: absolute;
+    left: 9px;
+    top: 10px;
+    font-size: 19px; }
+  #frontline-panel .frontline-icon-floppy {
+    font-size: 17px;
+    top: 11px; }
+  #frontline-panel .frontline-main-icon {
+    font-size: 46px;
+    color: #4affc6;
+    text-decoration: none;
+    display: inline-block;
+    -webkit-transition: color 200ms linear 0s;
+    -moz-transition: color 200ms linear 0s;
+    -ms-transition: color 200ms linear 0s;
+    -o-transition: color 200ms linear 0s;
+    transition: color 200ms linear 0s; }
+    #frontline-panel .frontline-main-icon:hover {
+      color: #7dffd6; }
+  #frontline-panel .frontline-close-icon {
+    position: absolute;
+    right: 17px;
+    top: 17px;
+    color: black;
+    font-size: 14px;
+    text-decoration: none; }
+    #frontline-panel .frontline-close-icon:hover {
+      color: #7dffd6; }
 
-#updated-warning {
-  position: fixed;
-  background: yellow;
-  position: fixed;
-  width: 100%;
-  top: 0;
-  left: 0;
-  padding: 10px; }
+#frontline-save-progress {
+  display: none;
+  padding: 17px;
+  background-color: #28d59e;
+  top: 15px;
+  right: 0;
+  position: fixed; }
 
 #frontline-lightbox {
   width: 100%;
@@ -77,7 +180,47 @@
   top: 0;
   left: 0;
   position: fixed;
-  background: rgba(0, 0, 0, 0.5); }
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10010;
+  font-family: Helvetica;
+  color: #e3fff6; }
+  #frontline-lightbox form {
+    width: auto; }
+  #frontline-lightbox button.cancel,
+  #frontline-lightbox button.save {
+    margin-top: 15px;
+    -webkit-appearance: none;
+    font-family: Helvetica;
+    font-weight: bold;
+    font-size: 14px;
+    color: black;
+    background: #4affc6;
+    border: none;
+    border-radius: 4px;
+    padding: 0 8px;
+    height: 40px;
+    line-height: 40px;
+    cursor: pointer;
+    display: block;
+    text-transform: none;
+    position: relative;
+    text-decoration: none;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -webkit-transition: background-color 200ms linear 0s;
+    -moz-transition: background-color 200ms linear 0s;
+    -ms-transition: background-color 200ms linear 0s;
+    -o-transition: background-color 200ms linear 0s;
+    transition: background-color 200ms linear 0s;
+    display: inline-block; }
+    #frontline-lightbox button.cancel:hover,
+    #frontline-lightbox button.save:hover {
+      background-color: #7dffd6; }
+    #frontline-lightbox button.cancel:focus,
+    #frontline-lightbox button.save:focus {
+      outline: none; }
+  #frontline-lightbox a {
+    color: #e3fff6; }
   #frontline-lightbox > .wrapper {
     height: 100%;
     margin: 0 auto;
@@ -88,6 +231,6 @@
       font-size: 100%;
       vertical-align: middle; }
       #frontline-lightbox > .wrapper > .inner > .content {
-        background-color: white;
+        background-color: #28d59e;
         padding: 20px;
         border-radius: 10px; }

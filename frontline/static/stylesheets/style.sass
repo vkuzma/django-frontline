@@ -1,77 +1,195 @@
-$font-family: Arial
+$font-family: Helvetica
+$main-color: #28d59e
+$lighter-color: #4affc6
+$super-light-color: lighten($lighter-color, 30%) 
+$hover-color: lighten($lighter-color, 10%)
+$inner-padding: 17px
 
-.marked-editable
+@mixin transition($prop, $duration, $ease:linear, $delay: 0s)
+    -webkit-transition: $prop $duration $ease $delay
+    -moz-transition: $prop $duration $ease $delay
+    -ms-transition: $prop $duration $ease $delay
+    -o-transition: $prop $duration $ease $delay
+    transition: $prop $duration $ease $delay
+
+@mixin front-line-btn-mixin
+    -webkit-appearance: none
+    font-family: $font-family
+    font-weight: bold
+    font-size: 14px
+    color: black
+    background: $lighter-color
+    border: none
+    border-radius: 4px
+    padding: 0 8px
+    height: 40px
+    line-height: 40px
+    cursor: pointer
+    display: block
+    text-transform: none
+    position: relative
+    text-decoration: none
+    box-sizing: border-box
+    -webkit-box-sizing: border-box
+    @include transition(background-color, 200ms)
+    &:hover 
+        background-color: $hover-color
+    
+    &:focus 
+        outline: none
+
+.frontline-marked-editable
     position: relative
     cursor: pointer
     word-wrap: initial
     &:focus
         cursor: text
         outline: none
-    &:before
-        content: ''
+
+    .frontline-edit-btn,
+    .frontline-image-edit
         width: 20px
         height: 20px
         position: absolute
         left: -34px
         top: -7px
-        background: url(/static/live_edit/images/edit_icon.png) no-repeat
+        background-color: $main-color
         background-position: 4px 4px
         cursor: pointer
-        padding: 4px
+        padding: 6px 2px 2px 6px
         border-radius: 4px
-    &:hover:before,
-    &:focus:before
-        background-color: rgba(0, 0, 0, .05)
+        -moz-box-shadow: 0 0 8px rgba(0,0,0,.5)
+        -webkit-box-shadow: 0 0 8px rgba(0,0,0,.5)
+        box-shadow: 0 0 8px rgba(0,0,0,.5)
+        text-decoration: none
+        &.edit
+            z-index: 10000
+            .frontline-icon-edit:before
+                content: "\e603"
+        .frontline-icon-edit
+            display: inline
+            font-family: 'icomoon'
+            speak: none
+            font-style: normal
+            font-weight: normal
+            font-variant: normal
+            text-transform: none
+            line-height: 1
+            color: black
+            font-size: 18px
+            position: absolute
+            top: 5px
+            left: 5px
+            &:before
+                text-decoration: none
+                content: "\e604"
 
-.live-edit-contenttype-edit
-    display: none
-
-.live-edit-richtext-btn
-    display: none
+.frontline-edit-btn,
 .frontline-image-edit
-    display: none
+    .frontline-icon-edit
+        display: none
+
+.frontline-box
+    font-family: $font-family
+    font-size: 14px
+    color: $super-light-color
+    background-color: $main-color
+    -moz-border-top-left-radius: 10px
+    -webkit-border-top-left-radius: 10px
+    border-top-left-radius: 10px
+    -moz-border-bottom-left-radius: 10px
+    -webkit-border-bottom-left-radius: 10px
+    border-bottom-left-radius: 10px    
+    -moz-background-clip: padding
+    -webkit-background-clip: padding-box
+    background-clip: padding-box
+    -moz-box-shadow: 0 0 8px rgba(0,0,0,.5)
+    -webkit-box-shadow: 0 0 8px rgba(0,0,0,.5)
+    box-shadow: 0 0 8px rgba(0,0,0,.5)
+
 
 #frontline-panel
     position: fixed
-    right: 0
-    top: 50%
-    bottom: 20px
-    font-family: $font-family
-    font-size: 13px
-    .save-progress
-        display: none
-    .inner
-        background: #FDC205
-        padding: 10px
-        border-top-left-radius: 10px
-        border-bottom-left-radius: 10px
+    top: 200px
+    right: -110px
+    width: 200px
+    height: 60px
+    overflow: hidden
+    -webkit-transition: height 500ms ease, right 500ms ease
+    -moz-transition: height 500ms ease, right 500ms ease
+    -ms-transition: height 500ms ease, right 500ms ease
+    -o-transition: height 500ms ease, right 500ms ease
+    transition: height 500ms ease, right 500ms ease
+    &.out 
+        li 
+            opacity: 1
+            @include transition(opacity, 600ms, linear, 200ms)
+        
+    
+    .frontline-inner 
+        box-sizing: border-box
+        -webkit-box-sizing: border-box
+        width: 100%
+        padding: 10px $inner-padding $inner-padding
+    
+    ul 
+        list-style: none
+        margin: 0
+        padding: 0
         text-align: center
-        float: right
-        clear: right
-        color: white
-        & + .inner
-            margin-top: 10px
-    button
-        -webkit-appearance: none
-        width: 80px
-        background: white
-        border: none
-        border-radius: 4px
-        padding: 5px 8px
-        text-transform: uppercase
-        cursor: pointer
-        font-family: $font-family
-        &:hover
-            text-decoration: underline
+    
+    li 
+        opacity: 0
+        @include transition(opacity, 200ms, linear, 0)
+    
+    li + li 
+        margin-top: 10px
+    
+    .btn 
+        @include front-line-btn-mixin
+        width: 100%
+    
+    .frontline-icon 
+        position: absolute
+        left: 9px
+        top: 10px
+        font-size: 19px
+    
+    .frontline-icon-floppy 
+        font-size: 17px
+        top: 11px
+    
+    .frontline-main-icon 
+        font-size: 46px
+        color: $lighter-color
+        margin 0 0 10px 0
+        text-decoration: none
+        display: inline-block
+        @include transition(color, 200ms)
+        &:hover 
+            color: $hover-color
+        
+    
+    .frontline-close-icon 
+        position: absolute
+        right: $inner-padding
+        top: $inner-padding
+        color: black
+        font-size: 14px
+        text-decoration: none
+        &:hover 
+            color: $hover-color
+        
+    
 
-#updated-warning
+#frontline-save-progress 
+    display: none
+    padding: $inner-padding
+    background-color: $main-color
+    top: 15px
+    right: 0
     position: fixed
-    background: rgb(255, 255, 0)
-    position: fixed
-    width: 100%
-    top: 0
-    left: 0
-    padding: 10px
+
 
 #frontline-lightbox
     width: 100%
@@ -80,6 +198,21 @@ $font-family: Arial
     left: 0
     position: fixed
     background: rgba(0, 0, 0, 0.5)
+    z-index: 10010
+    font-family: $font-family
+    color: $super-light-color
+
+    form
+        width: auto
+
+    button.cancel,
+    button.save
+        margin-top: 15px
+        @include front-line-btn-mixin
+        display: inline-block
+    a
+        color: $super-light-color
+
     > .wrapper
         height: 100%
         margin: 0 auto
@@ -90,6 +223,6 @@ $font-family: Arial
             font-size: 100%
             vertical-align: middle
             > .content
-                background-color: white
+                background-color: $main-color
                 padding: 20px
                 border-radius: 10px

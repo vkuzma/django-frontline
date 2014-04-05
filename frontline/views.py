@@ -55,6 +55,7 @@ class ImageUploadFormView(FormView):
 
     def form_valid(self, form, tag_option=None):
         self.object = form.save()
+        print tag_option
         if tag_option == 'need_reload':
             return render_to_response('frontline/need_reload.html')
         return HttpResponse('ok')

@@ -13,8 +13,12 @@
             this.$panel = $('#frontline-panel');
             
             this.inline_edit = $('.frontline-edit.inline');
+            this.inline_edit_content = this.inline_edit.find('.frontline-content');
+            this.inline_edit_btn = this.inline_edit.find('.frontline-edit-btn');
             this.richtext_edit = $('.frontline-edit.lightbox');
             this.image_edit = $('.frontline-image-edit');
+
+            this.open_panel_btn = this.$panel.find('.frontline-open-panel-btn');
 
             this.active_anchor = null;
 
@@ -24,6 +28,7 @@
 
             this.edit_start_btn = $('#live-edit-start');
             this.edit_stop_btn = $('#live-edit-stop');
+            this.edit_save_btn = $('#live-edit-save');
 
             this.updated_warning = $('#updated-warning');
         },
@@ -31,33 +36,72 @@
         initActions: function() {
             this.edit_start_btn.click($.proxy(this.startEditing, this));
             this.edit_stop_btn.click($.proxy(this.stopEditing, this));
+            this.edit_save_btn.click($.proxy(this.saveAll, this));
 
             this.selectedContent = null;
             var self = this;
 
             // focusin inline edit
             this.inline_edit.focusin(function() {
+                var $this = $(this);
+                var $button = $this.find('.frontline-edit-btn');
+                var $content = $this.find('.frontline-content');
+                $button.addClass('edit');
+
                 self.selectedContent = $(this).html();
             }).focusout(function() {
+                // var $this = $(this);
+                // // selected content stayed the same, do not save
+                // if(self.selectedContent == $this.html())
+                //     return;
+
+                // // if its not richtext, then call striptags
+                // if(!$this.hasClass('tinymce'))
+                //     $this.html(self.stripTag($this.html()));
+
+                // // save data
+                // self.saveData();
+
+                // self.selectedContent = null;
+            });
+
+            // click on edit button
+            this.inline_edit_btn.click(function(event) {
+                event.preventDefault();
                 var $this = $(this);
-                // selected content stayed the same, do not save
-                if(self.selectedContent == $this.html())
-                    return;
+                var $content = $(this).parent().find('.frontline-content');
+                if(!$this.hasClass('edit')) {
+                    $this.addClass('edit');
+                    $content.focus();
+                }
+                else {
+                    $(window).focus();
+                    $this.removeClass('edit');
+                    self.saveData($this.parent());
+                }
+            });
 
-                // if its not richtext, then call striptags
-                if(!$this.hasClass('tinymce'))
-                    $this.html(self.stripTag($this.html()));
-
-                // save data
-                self.saveData();
-
-                self.selectedContent = null;
+            this.open_panel_btn.click(function(event) {
+                event.preventDefault();
+                var $this = $(this);
+                if(!self.is_out) {
+                    if(!self.panel_height)
+                        self.panel_height = self.$panel.find('.frontline-inner').outerHeight();
+                    self.$panel.height(self.panel_height).css('right', 0).addClass('out');
+                    self.is_out = true;
+                }
+                else {
+                    self.$panel.height(60).css('right', -110).removeClass('out');
+                    self.is_out = false;
+                }
             });
         },
         startEditing: function() {
-            this.inline_edit.attr('contenteditable', 'true').addClass('marked-editable');
-            this.richtext_edit.addClass('marked-editable');
-            this.image_edit.show();
+            this.inline_edit.addClass('frontline-marked-editable');
+            this.inline_edit_content.attr('contenteditable', 'true');
+            this.richtext_edit.addClass('frontline-marked-editable');
+            this.image_edit.addClass('frontline-marked-editable');
+
 
             this.edit_stop_btn.show();
             this.edit_start_btn.hide();
@@ -67,10 +111,11 @@
             var self = this;
 
             // open richtext editor
-            this.richtext_edit.click(function() {
+            this.richtext_edit.click(function(event) {
                 event.preventDefault();
                 self.current_edit = $(this);
-                self.active_name = $(this).attr('data-name');
+                self.current_content = self.current_edit.find('.frontline-content');
+                self.active_name = self.current_edit.attr('data-name');
                 self.openRichtextInLightbox(self.active_name);
             });
 
@@ -78,14 +123,15 @@
             this.image_edit.click(function(event) {
                 event.preventDefault();
                 self.current_edit = $(this);
+                self.current_content = self.current_edit.find('.frontline-content');
                 self.active_name = self.current_edit.attr('data-name');
                 self.openImageFormInLightbox(self.active_name);
             });
         },
         stopEditing: function() {
-            this.inline_edit.attr('contenteditable', 'false').removeClass('marked-editable');
-            this.richtext_edit.removeClass('marked-editable');
-            this.image_edit.hide();
+            this.inline_edit.attr('contenteditable', 'false').removeClass('frontline-marked-editable');
+            this.richtext_edit.removeClass('frontline-marked-editable');
+            this.image_edit.removeClass('frontline-marked-editable');
 
             this.edit_stop_btn.hide();
             this.edit_start_btn.show();
@@ -116,7 +162,7 @@
         // display small window to show that data is saving
         showSaveView: function() {
             if(!this.save_progress_view)
-                this.save_progress_view = this.$panel.find('.save-progress');
+                this.save_progress_view = $('#frontline-save-progress');
             
             this.save_progress_view.fadeIn();
             setTimeout($.proxy(function() {
@@ -142,7 +188,7 @@
                         data += '&data=' + tinymce.activeEditor.getContent();
                         $.post('/api/richtext-form/' + name + '/', data,
                             function(result) {
-                                self.current_edit.html(result);
+                                self.current_content.html(result);
                             });
                         self.cancelLightBox();
                     });
@@ -198,6 +244,13 @@
         cancelLightBox: function() {
             this.lightbox_container.hide();
         },
+        saveAll: function() {
+            var self = this;
+            this.inline_edit_btn.removeClass('edit');
+            this.inline_edit.each(function(key, value) {
+                self.saveData($(value));
+            });
+        }
     };
 
     function getCookie(name) {
