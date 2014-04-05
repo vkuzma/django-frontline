@@ -153,7 +153,7 @@
             }, this));
 
             $.ajax({
-                url: '/api/save/',
+                url: '/admin/frontline/entry/save/',
                 method: 'POST',
                 data: inline_text_list
             });
@@ -178,7 +178,7 @@
         openRichtextInLightbox: function(name) {
             var self = this;
             $.ajax({
-                url: '/api/richtext-form/' + name + '/',
+                url: '/admin/frontline/entry/richtext-form/' + name + '/',
                 success: function(result) {
                     self.lightbox_container.find('.content').html(result);
                     // lightbox save
@@ -186,7 +186,7 @@
                         event.preventDefault();
                         var data = $('#frontline-richtext-form').serialize();
                         data += '&data=' + tinymce.activeEditor.getContent();
-                        $.post('/api/richtext-form/' + name + '/', data,
+                        $.post('/admin/frontline/entry/richtext-form/' + name + '/', data,
                             function(result) {
                                 self.current_content.html(result);
                             });
@@ -207,7 +207,7 @@
         openImageFormInLightbox: function(name) {
             var self = this;
             $.ajax({
-                url: '/api/image-upload-form/' + name,
+                url: '/admin/frontline/imageentry/image-upload-form/' + name,
                 success: function(result) {
                     self.lightbox_container.find('.content').html(result);
 
@@ -222,7 +222,7 @@
                         var form_data = new FormData(this);
                         $.ajax({
                             type:'POST',
-                            url: '/api/image-upload-form/' + name + '/?option=' +
+                            url: '/admin/frontline/imageentry/image-upload-form/' + name + '/?option=' +
                                 self.current_edit.attr('data-option'),
                             data: form_data,
                             cache: false,
